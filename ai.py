@@ -6,6 +6,25 @@ load_dotenv()
 from gtts import gTTS
 import tempfile
 
+def ask_question(question):
+    prompt = f"""
+You are PGC Bot.
+
+Answer this student's question clearly and simply.
+
+Question:
+{question}
+"""
+
+    try:
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt
+        )
+        return response.text
+    except Exception as e:
+        return f"Error: {e}"
+
 def text_to_speech(text):
     tts = gTTS(text=text, lang="en")
 
