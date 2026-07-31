@@ -50,13 +50,6 @@ Welcome to *PGC Bot*, your personal AI study assistant.
 st.header("🧑 Student Information")
 
 name = st.text_input("Student Name")
-
-# Year = st.selectbox(
-#     "Select Year"
-#     ["1st Year","2nd Year"]
-# )
-
-
 program = st.selectbox(
     "Select Program",
     ["FSc Pre-Medical", "FSc Pre-Engineering", "ICS", "ICOM", "FA"]
@@ -105,7 +98,6 @@ if st.button("📅 Generate AI Study Plan"):
         plan = ai_study_plan(
             name,
             program,
-            # Year,
             subjects,
             weak_subjects,
             preferred_time,
