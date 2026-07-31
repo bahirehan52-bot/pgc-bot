@@ -8,6 +8,35 @@ st.set_page_config(
     page_icon="🎓",
     layout="wide"
 )
+st.markdown("""
+<style>
+.stApp {
+    background: linear-gradient(135deg, #6dd5ed, #2193b0, #6a11cb);
+    background-attachment: fixed;
+}
+
+h1, h2, h3 {
+    color: white;
+}
+
+p, label {
+    color: white;
+}
+
+[data-testid="stSidebar"] {
+    background-color: rgba(255,255,255,0.15);
+}
+
+div[data-baseweb="input"] {
+    background-color: white;
+    border-radius: 10px;
+}
+
+button[kind="primary"] {
+    border-radius: 10px;
+}
+</style>
+""", unsafe_allow_html=True)
 st.markdown("---")
 st.header("🎤 Voice Assistant")
 
@@ -206,7 +235,7 @@ if st.button("Generate MCQs"):
             mcq_count
         )
 
-    st.markdown("### 📚 AI Generated MCQs")
+    if uploaded_file is not None:
     st.write(mcqs)
 
     st.download_button(
