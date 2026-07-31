@@ -9,25 +9,6 @@ def add_bg():
     with open("pic.jpg", "rb") as image_file:
         encoded = base64.b64encode(image_file.read()).decode()
 
-    st.markdown(f"""
-    <style>
-    .stApp {{
-        background-image: url("data:image/jpg;base64,{encoded}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }}
-    </style>
-    """, unsafe_allow_html=True)
-
-add_bg()
-
-st.set_page_config(
-    page_title="Punjab Group of Colleges",
-    page_icon="🎓",
-    layout="wide"
-)
 st.markdown("""
 <style>
 .stApp {
@@ -50,6 +31,17 @@ p, label {
 div[data-baseweb="input"] {
     background-color: white;
     border-radius: 10px;
+}
+
+/* Date picker */
+div[data-testid="stDateInput"] input {
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+}
+
+div[data-testid="stDateInput"] button {
+    color: black;
 }
 
 button[kind="primary"] {
