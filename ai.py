@@ -43,7 +43,7 @@ client = genai.Client(
 MODEL_NAME = "gemini-3.6-flash"
 
 
-def ai_study_plan(name,year, program, subjects, weak_subjects,
+def ai_study_plan(name, program, subjects, weak_subjects,
                   preferred_time, study_hours, goal, exam_date):
 
     prompt = f"""
