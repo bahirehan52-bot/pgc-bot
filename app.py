@@ -255,7 +255,7 @@ if st.button("Generate MCQs"):
             mcq_count
         )
 
-    if uploaded_file is not None:
+   st.markdown("## 📝 Generate MCQs")
     st.write(mcqs)
 
     st.download_button(
