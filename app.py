@@ -3,6 +3,26 @@ import streamlit as st
 from datetime import date
 import fitz
 from streamlit_mic_recorder import speech_to_text
+import base64
+
+def add_bg():
+    with open("background.jpg", "rb") as image_file:
+        encoded = base64.b64encode(image_file.read()).decode()
+
+    st.markdown(f"""
+    <style>
+    .stApp {{
+        background-image: url("data:image/jpg;base64,{encoded}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
+    </style>
+    """, unsafe_allow_html=True)
+
+add_bg()
+
 st.set_page_config(
     page_title="Punjab Group of Colleges",
     page_icon="🎓",
