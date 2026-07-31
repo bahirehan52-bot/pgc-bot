@@ -255,7 +255,7 @@ if st.button("Generate MCQs"):
             mcq_count
         )
 
-   st.markdown("## 📝 Generate MCQs")
+    st.markdown("## 📝 Generate MCQs")
     st.write(mcqs)
 
     st.download_button(
