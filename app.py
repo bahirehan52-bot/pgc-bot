@@ -6,7 +6,7 @@ from streamlit_mic_recorder import speech_to_text
 import base64
 
 def add_bg():
-    with open("background.jpg", "rb") as image_file:
+    with open("pic.jpg", "rb") as image_file:
         encoded = base64.b64encode(image_file.read()).decode()
 
     st.markdown(f"""
