@@ -5,6 +5,13 @@ import fitz
 from streamlit_mic_recorder import speech_to_text
 import base64
 
+
+st.set_page_config(
+    page_title="Punjab Group of Colleges",
+    page_icon="🎓",
+    layout="wide"
+)
+
 def add_bg():
     with open("pic.jpg", "rb") as image_file:
         encoded = base64.b64encode(image_file.read()).decode()
