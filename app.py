@@ -230,7 +230,7 @@ if uploaded_file is not None:
         stream=uploaded_file.read(),
         filetype="pdf"
     )
-for page in doc:
+    for page in doc:
     # Extract normal text
     pdf_text += page.get_text()
 
