@@ -4,6 +4,9 @@ from datetime import date
 import fitz
 from streamlit_mic_recorder import speech_to_text
 import base64
+import pytesseract
+from PIL import Image
+import io
 
 
 st.set_page_config(
@@ -227,9 +230,14 @@ if uploaded_file is not None:
         stream=uploaded_file.read(),
         filetype="pdf"
     )
+for page in doc:
+    # Extract normal text
+    pdf_text += page.get_text()
 
-    for page in doc:
-        pdf_text += page.get_text()
+    # Extract image text using OCR
+    pix = page.get_pixmap(dpi=300)
+    img = Image.open(io.BytesIO(pix.tobytes("png")))
+    pdf_text += "\n" + pytesseract.image_to_string(img)
 
     st.success("✅ PDF Uploaded Successfully!")
 
