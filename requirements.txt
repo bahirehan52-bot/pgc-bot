@@ -1,6 +1,8 @@
-streamlit 
+streamlit
 google-genai
+PyMuPDF
+pytesseract
+Pillow
 python-dotenv
-pymupdf
 gtts
 streamlit-mic-recorder
