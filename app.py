@@ -49,6 +49,11 @@ button[kind="primary"] {
 }
 </style>
 """, unsafe_allow_html=True)
+st.title("🎓 PGC Bot")
+st.write("""
+Welcome to *PGC Bot*, your personal AI study assistant.
+""")
+
 st.markdown("---")
 st.header("🎤 Voice Assistant")
 
@@ -79,10 +84,7 @@ if voice:
 
     st.audio(audio)
 
-st.title("🎓 PGC Bot")
-st.write("""
-Welcome to *PGC Bot*, your personal AI study assistant.
-""")
+
 
 # ==========================
 # Student Information
