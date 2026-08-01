@@ -16,6 +16,17 @@ def add_bg():
     with open("pic.jpg", "rb") as image_file:
         encoded = base64.b64encode(image_file.read()).decode()
 
+    st.markdown(f"""
+    <style>
+    .stApp {{
+        background-image: url("data:image/jpg;base64,{encoded}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }}
+    </style>
+    """, unsafe_allow_html=True)
+
 st.markdown("""
 <style>
 .stApp {
