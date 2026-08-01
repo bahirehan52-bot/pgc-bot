@@ -230,14 +230,15 @@ if uploaded_file is not None:
         stream=uploaded_file.read(),
         filetype="pdf"
     )
-    for page in doc:
-    # Extract normal text
-    pdf_text += page.get_text()
 
-    # Extract image text using OCR
-    pix = page.get_pixmap(dpi=300)
-    img = Image.open(io.BytesIO(pix.tobytes("png")))
-    pdf_text += "\n" + pytesseract.image_to_string(img)
+    for page in doc:
+        # Extract normal text
+        pdf_text += page.get_text()
+
+        # Extract image text using OCR
+        pix = page.get_pixmap(dpi=300)
+        img = Image.open(io.BytesIO(pix.tobytes("png")))
+        pdf_text += "\n" + pytesseract.image_to_string(img)
 
     st.success("✅ PDF Uploaded Successfully!")
 
