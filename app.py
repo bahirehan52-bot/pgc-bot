@@ -27,46 +27,7 @@ def add_bg():
     </style>
     """, unsafe_allow_html=True)
 
-st.markdown("""
-<style>
-.stApp {
-    background: linear-gradient(135deg, #6dd5ed, #2193b0, #6a11cb);
-    background-attachment: fixed;
-}
 
-h1, h2, h3 {
-    color: white;
-}
-
-p, label {
-    color: white;
-}
-
-[data-testid="stSidebar"] {
-    background-color: rgba(255,255,255,0.15);
-}
-
-div[data-baseweb="input"] {
-    background-color: white;
-    border-radius: 10px;
-}
-
-/* Date picker */
-div[data-testid="stDateInput"] input {
-    background-color: white;
-    color: black;
-    border-radius: 10px;
-}
-
-div[data-testid="stDateInput"] button {
-    color: black;
-}
-
-button[kind="primary"] {
-    border-radius: 10px;
-}
-</style>
-""", unsafe_allow_html=True)
 st.title("🎓 PGC Bot")
 st.write("""
 Welcome to *PGC Bot*, your personal AI study assistant.
