@@ -184,8 +184,8 @@ if st.button("Ask AI"):
             audio_file = text_to_speech(answer)
             st.audio(audio_file)
 
-        st.markdown("### 📖 Answer")
-        st.write(answer)
+     #   st.markdown("### 📖 Answer")
+     #   st.write(answer)
 
 # ==========================
 # PDF Upload
