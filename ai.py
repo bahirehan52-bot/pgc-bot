@@ -17,7 +17,7 @@ client = genai.Client(
     api_key=os.getenv("GEMINI_API_KEY")
 )
 
-MODEL_NAME = "gemini-3.6-flash-lite"
+MODEL_NAME = "gemini-3.6-flash"
 
 # ==========================
 # Text To Speech
