@@ -1,32 +1,33 @@
 import os
+import tempfile
+import fitz
+
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
+from gtts import gTTS
+
 load_dotenv()
 
-from gtts import gTTS
-import tempfile
+# ==========================
+# Gemini Configuration
+# ==========================
 
-def ask_question(question):
-    prompt = f"""
-You are PGC Bot.
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
 
-Answer this student's question clearly and simply.
+MODEL_NAME = "gemini-3.6-flash"
 
-Question:
-{question}
-"""
-
-    try:
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=prompt
-        )
-        return response.text
-    except Exception as e:
-        return f"Error: {e}"
+# ==========================
+# Text To Speech
+# ==========================
 
 def text_to_speech(text):
-    tts = gTTS(text=text, lang="en")
+    tts = gTTS(
+        text=text,
+        lang="en"
+    )
 
     temp_file = tempfile.NamedTemporaryFile(
         delete=False,
@@ -36,18 +37,87 @@ def text_to_speech(text):
     tts.save(temp_file.name)
 
     return temp_file.name
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
 
-MODEL_NAME = "gemini-3.6-flash"
+# ==========================
+# Read PDF using Gemini Vision
+# ==========================
 
+def read_pdf_with_gemini(uploaded_file):
 
-def ai_study_plan(name, program, subjects, weak_subjects,
-                  preferred_time, study_hours, goal, exam_date):
+    doc = fitz.open(
+        stream=uploaded_file.read(),
+        filetype="pdf"
+    )
+
+    full_text = ""
+
+    for page in doc:
+
+        pix = page.get_pixmap(dpi=300)
+        image_bytes = pix.tobytes("png")
+
+        try:
+
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=[
+                    """
+You are an AI OCR assistant.
+
+Read every visible element on this PDF page.
+
+Extract:
+- Printed text
+- Handwritten text
+- Tables
+- Graphs
+- Charts
+- Diagrams
+- Mathematical equations
+- Labels
+- Captions
+- Text inside images
+
+Preserve the reading order.
+
+Return only the extracted educational content as plain text.
+""",
+                    types.Part.from_bytes(
+                        data=image_bytes,
+                        mime_type="image/png"
+                    )
+                ]
+            )
+
+            if response.text:
+                full_text += response.text + "\n\n"
+
+        except Exception as e:
+            full_text += f"\n[Error reading page: {e}]\n"
+
+    doc.close()
+
+    return full_text
+
+    # ==========================
+# AI Study Planner
+# ==========================
+
+def ai_study_plan(
+    name,
+    program,
+    subjects,
+    weak_subjects,
+    preferred_time,
+    study_hours,
+    goal,
+    exam_date
+):
 
     prompt = f"""
-You are PGC Bot, an expert AI study planner.
+You are PGC Bot, an expert study planner.
+
+Create a complete personalized study plan.
 
 Student Name: {name}
 Program: {program}
@@ -58,81 +128,217 @@ Study Hours Per Day: {study_hours}
 Exam Date: {exam_date}
 Target: {goal}
 
-Create:
-1. A personalized daily study schedule.
-2. A weekly revision plan.
-3. Break timings.
-4. Study tips.
-5. Motivation.
+Generate:
+
+1. Daily timetable
+2. Weekly study plan
+3. Revision schedule
+4. Break timings
+5. Smart study tips
+6. Exam preparation strategy
+7. Motivation
 """
 
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=prompt
-    )
+    try:
 
-    return response.text
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt
+        )
 
+        return response.text
+
+    except Exception as e:
+
+        return f"❌ Error generating study plan:\n\n{e}"
+
+
+# ==========================
+# Ask AI
+# ==========================
 
 def ask_question(question):
 
     prompt = f"""
 You are PGC Bot.
 
-Answer this student's question clearly and simply.
+Answer the student's question clearly.
 
 Question:
 {question}
 """
 
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=prompt
-    )
+    try:
 
-    return response.text
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt
+        )
 
+        return response.text
+
+    except Exception as e:
+
+        return f"❌ Error:\n\n{e}"
+
+
+# ==========================
+# Ask Questions from PDF
+# ==========================
 
 def ask_pdf(pdf_text, question):
 
     prompt = f"""
 You are PGC Bot.
 
-Answer ONLY from the uploaded PDF.
+Use ONLY the information extracted from the uploaded PDF.
 
-PDF:
+If the answer is not available in the PDF, reply:
+
+"I couldn't find this information in the uploaded PDF."
+
+PDF Content:
+
 {pdf_text}
 
-Question:
+Student Question:
+
 {question}
 """
 
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=prompt
-    )
+    try:
 
-    return response.text
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt
+        )
 
+        return response.text
+
+    except Exception as e:
+
+        return f"❌ Error:\n\n{e}"
+
+
+# ==========================
+# Generate AI MCQs
+# ==========================
 
 def generate_mcqs(pdf_text, mcq_count):
 
     prompt = f"""
-Generate {mcq_count} multiple choice questions from these notes.
+You are an expert teacher.
 
-Rules:
-- Each MCQ must have 4 options (A, B, C, D)
-- Give the correct answer.
-- Give a short explanation.
+Generate exactly {mcq_count} multiple-choice questions from these notes.
+
+Requirements:
+
+• 4 options (A, B, C, D)
+• Only one correct answer
+• Mention the correct option
+• Give a short explanation
+• Cover different topics
+• Use clear formatting
 
 PDF Notes:
 
 {pdf_text}
 """
 
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=prompt
-    )
+    try:
 
-    return response.text
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt
+        )
+
+        return response.text
+
+    except Exception as e:
+
+        return f"❌ Error:\n\n{e}"
+
+
+# ==========================
+# Helper Functions
+# ==========================
+
+def check_api_connection():
+    """
+    Check whether the Gemini API is working.
+    """
+
+    try:
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents="Reply with only the word: Connected"
+        )
+
+        return True, response.text
+
+    except Exception as e:
+        return False, str(e)
+
+
+def summarize_notes(pdf_text):
+    """
+    Generate a concise summary of the extracted notes.
+    """
+
+    prompt = f"""
+You are PGC Bot.
+
+Summarize the following notes.
+
+Include:
+- Main topics
+- Important concepts
+- Key points
+- Exam tips
+
+Notes:
+
+{pdf_text}
+"""
+
+    try:
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt
+        )
+
+        return response.text
+
+    except Exception as e:
+        return f"❌ Error:\n\n{e}"
+
+
+def generate_flashcards(pdf_text):
+    """
+    Generate flashcards from notes.
+    """
+
+    prompt = f"""
+Create flashcards from these notes.
+
+Format:
+
+Q: Question
+
+A: Answer
+
+Notes:
+
+{pdf_text}
+"""
+
+    try:
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt
+        )
+
+        return response.text
+
+    except Exception as e:
+        return f"❌ Error:\n\n{e}"
