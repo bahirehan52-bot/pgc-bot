@@ -44,10 +44,12 @@ def text_to_speech(text):
 
 def read_pdf_with_gemini(uploaded_file):
 
+    pdf_bytes = uploaded_file.getvalue()
+
     doc = fitz.open(
-        stream=uploaded_file.read(),
-        filetype="pdf"
-    )
+    stream=pdf_bytes,
+    filetype="pdf"
+)
 
     full_text = ""
 
@@ -99,7 +101,7 @@ Return only the extracted educational content as plain text.
 
     return full_text
 
-    # ==========================
+# ==========================
 # AI Study Planner
 # ==========================
 
@@ -138,26 +140,25 @@ Generate:
 6. Exam preparation strategy
 7. Motivation
 """
-
     for attempt in range(3):
-    try:
+        try:
 
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=prompt
-        )
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=prompt
+            )
 
-        return response.text
+            return response.text
 
-    except Exception as e:
+        except Exception as e:
 
-        if "503" in str(e):
-            time.sleep(5)
-            continue
+            if "503" in str(e):
+                time.sleep(5)
+                continue
 
-        return f"❌ Error generating study plan:\n\n{e}"
+            return f"❌ Error generating study plan:\n\n{e}"
 
-return "⚠️ Gemini server is busy. Please try again."
+    return "⚠️ Gemini server is busy. Please try again."
 
 
 # ==========================
