@@ -1,7 +1,7 @@
 import os
 import tempfile
 import fitz
-
+import time
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -17,7 +17,7 @@ client = genai.Client(
     api_key=os.getenv("GEMINI_API_KEY")
 )
 
-MODEL_NAME = "gemini-3.6-flash"
+MODEL_NAME = "gemini-2.5-flash-lite"
 
 # ==========================
 # Text To Speech
@@ -139,6 +139,7 @@ Generate:
 7. Motivation
 """
 
+    for attempt in range(3):
     try:
 
         response = client.models.generate_content(
@@ -150,7 +151,13 @@ Generate:
 
     except Exception as e:
 
+        if "503" in str(e):
+            time.sleep(5)
+            continue
+
         return f"❌ Error generating study plan:\n\n{e}"
+
+return "⚠️ Gemini server is busy. Please try again."
 
 
 # ==========================
