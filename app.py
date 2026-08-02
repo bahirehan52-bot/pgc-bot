@@ -209,8 +209,6 @@ if st.button("Ask AI"):
 
             answer = ask_question(question)
             st.write(answer)
-            audio_file = text_to_speech(answer)
-            st.audio(audio_file)
 
      #   st.markdown("### 📖 Answer")
      #   st.write(answer)
